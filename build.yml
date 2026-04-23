@@ -1,0 +1,32 @@
+name: Compilar EXE Windows
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar PyInstaller
+        run: pip install pyinstaller
+
+      - name: Compilar EXE
+        run: |
+          pyinstaller --onefile --windowed --name "Calculadora_Subredes" app/calculadora_subredes.py
+
+      - name: Subir EXE como artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: Calculadora_Subredes_EXE
+          path: dist/Calculadora_Subredes.exe
